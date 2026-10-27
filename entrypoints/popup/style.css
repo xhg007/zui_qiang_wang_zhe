@@ -1,0 +1,13 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 400px;
+  background: var(--ai-bg);
+  color: var(--ai-fg);
+  font-family: var(--ai-font);
+}
+
+#app {
+  padding: 12px;
+}
