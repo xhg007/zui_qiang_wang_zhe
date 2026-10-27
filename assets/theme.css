@@ -1,0 +1,480 @@
+/* ============================================================
+   设计令牌 + 基础控件（popup / options / content 三处共用）
+   方向：社交 App 卡片风 —— 头像、气泡、大圆角、微动效
+   ============================================================ */
+:root {
+  color-scheme: light dark;
+
+  /* 品牌：莓红 → 橙，代表「交锋的热度」 */
+  --ai-accent-a: #ff4d6d;
+  --ai-accent-b: #ff8a5b;
+  --ai-accent: #ff5c72;
+  --ai-accent-soft: #fff0f2;
+  --ai-on-accent: #ffffff;
+  --ai-grad: linear-gradient(135deg, var(--ai-accent-a) 0%, var(--ai-accent-b) 100%);
+
+  /* 表面与文字 */
+  --ai-bg: #ffffff;
+  --ai-surface: #f6f6f9;
+  --ai-surface-2: #eeeef3;
+  --ai-bubble-in: #f2f2f6;
+  --ai-bubble-out: #ffffff;
+  --ai-border: rgba(17, 17, 26, 0.09);
+  --ai-border-strong: rgba(17, 17, 26, 0.16);
+  --ai-fg: #16161a;
+  --ai-fg-soft: #55555f;
+  --ai-fg-mute: #8b8b98;
+
+  /* 语义 */
+  --ai-ok: #0fa678;
+  --ai-ok-soft: #e7f8f1;
+  --ai-danger: #e5484d;
+  --ai-danger-soft: #fdecec;
+  --ai-warn-soft: #fff7e6;
+  --ai-warn-line: #f0d8a4;
+
+  /* 几何 */
+  --ai-r-sm: 10px;
+  --ai-r-md: 14px;
+  --ai-r-lg: 18px;
+  --ai-r-xl: 22px;
+  --ai-pill: 999px;
+
+  /* 阴影与节奏 */
+  --ai-shadow: 0 18px 44px -14px rgba(17, 17, 26, 0.3);
+  --ai-shadow-sm: 0 2px 10px rgba(17, 17, 26, 0.07);
+  --ai-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+
+  --ai-font:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', sans-serif;
+  --ai-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ai-accent-a: #ff5c7f;
+    --ai-accent-b: #ff9a6b;
+    --ai-accent: #ff6f85;
+    --ai-accent-soft: #3a2028;
+    --ai-on-accent: #1a0d12;
+    --ai-grad: linear-gradient(135deg, var(--ai-accent-a) 0%, var(--ai-accent-b) 100%);
+
+    --ai-bg: #141418;
+    --ai-surface: #1d1d23;
+    --ai-surface-2: #26262e;
+    --ai-bubble-in: #24242c;
+    --ai-bubble-out: #1b1b21;
+    --ai-border: rgba(255, 255, 255, 0.1);
+    --ai-border-strong: rgba(255, 255, 255, 0.2);
+    --ai-fg: #f2f2f5;
+    --ai-fg-soft: #b9b9c4;
+    --ai-fg-mute: #85858f;
+
+    --ai-ok: #3ddc9a;
+    --ai-ok-soft: #123027;
+    --ai-danger: #ff7b7b;
+    --ai-danger-soft: #3a1f22;
+    --ai-warn-soft: #33291a;
+    --ai-warn-line: #5b4a2a;
+
+    --ai-shadow: 0 18px 44px -14px rgba(0, 0, 0, 0.72);
+    --ai-shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* ---------- 基础 ---------- */
+.ai-root,
+.ai-root * {
+  box-sizing: border-box;
+}
+
+.ai-root {
+  font-family: var(--ai-font);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ai-fg);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ai-card {
+  background: var(--ai-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: var(--ai-r-xl);
+  box-shadow: var(--ai-shadow);
+}
+
+/* ---------- 头像与气泡 ---------- */
+.ai-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  border-radius: 50%;
+  background: var(--ai-grad);
+  box-shadow: 0 4px 12px -4px rgba(255, 77, 109, 0.55);
+  user-select: none;
+}
+
+.ai-avatar.sm {
+  width: 26px;
+  height: 26px;
+  font-size: 13px;
+}
+
+.ai-bubble {
+  position: relative;
+  padding: 9px 12px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  border-radius: var(--ai-r-lg);
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/* 对方（左） */
+.ai-bubble.in {
+  color: var(--ai-fg-soft);
+  background: var(--ai-bubble-in);
+  border-top-left-radius: 6px;
+}
+
+/* AI（右）：渐变描边 + 干净内表面 */
+.ai-bubble.out {
+  color: var(--ai-fg);
+  background:
+    linear-gradient(var(--ai-bubble-out), var(--ai-bubble-out)) padding-box,
+    var(--ai-grad) border-box;
+  border: 1.5px solid transparent;
+  border-top-right-radius: 6px;
+  box-shadow: var(--ai-shadow-sm);
+}
+
+.ai-bubble .bubble-meta {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--ai-fg-mute);
+}
+
+/* ---------- 按钮 ---------- */
+.ai-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 13px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ai-fg);
+  background: var(--ai-surface);
+  border: 1px solid var(--ai-border);
+  border-radius: var(--ai-pill);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 0.12s var(--ai-ease),
+    background 0.16s var(--ai-ease),
+    border-color 0.16s var(--ai-ease),
+    opacity 0.16s var(--ai-ease);
+}
+
+.ai-btn:hover:not(:disabled) {
+  background: var(--ai-surface-2);
+  border-color: var(--ai-border-strong);
+}
+
+.ai-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.ai-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ai-btn.primary {
+  color: var(--ai-on-accent);
+  background: var(--ai-grad);
+  border-color: transparent;
+  box-shadow: 0 6px 16px -8px rgba(255, 77, 109, 0.8);
+}
+
+.ai-btn.primary:hover:not(:disabled) {
+  background: var(--ai-grad);
+  filter: brightness(1.05);
+}
+
+.ai-btn.ghost {
+  background: transparent;
+  border-color: transparent;
+  font-weight: 500;
+  color: var(--ai-fg-soft);
+}
+
+.ai-btn.ghost:hover:not(:disabled) {
+  background: var(--ai-surface);
+}
+
+.ai-btn.small {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+/* 圆形图标按钮 */
+.ai-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--ai-fg-soft);
+  background: var(--ai-surface);
+  border: 1px solid var(--ai-border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    transform 0.12s var(--ai-ease),
+    background 0.16s var(--ai-ease),
+    color 0.16s var(--ai-ease);
+}
+
+.ai-icon-btn:hover:not(:disabled) {
+  color: var(--ai-fg);
+  background: var(--ai-surface-2);
+}
+
+.ai-icon-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.ai-icon-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 主操作胶囊（渐变） */
+.ai-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ai-on-accent);
+  background: var(--ai-grad);
+  border: none;
+  border-radius: var(--ai-pill);
+  cursor: pointer;
+  box-shadow: 0 8px 20px -10px rgba(255, 77, 109, 0.9);
+  transition:
+    transform 0.12s var(--ai-ease),
+    filter 0.16s var(--ai-ease),
+    opacity 0.16s var(--ai-ease);
+}
+
+.ai-pill:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.ai-pill:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.ai-pill:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ---------- 风格 chip ---------- */
+.ai-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ai-fg-soft);
+  background: var(--ai-surface);
+  border: 1px solid var(--ai-border);
+  border-radius: var(--ai-pill);
+  cursor: pointer;
+  transition:
+    transform 0.12s var(--ai-ease),
+    background 0.16s var(--ai-ease),
+    color 0.16s var(--ai-ease),
+    border-color 0.16s var(--ai-ease);
+}
+
+.ai-chip:hover:not(:disabled) {
+  color: var(--ai-fg);
+  border-color: var(--ai-border-strong);
+}
+
+.ai-chip:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.ai-chip.active {
+  color: var(--ai-on-accent);
+  background: var(--ai-grad);
+  border-color: transparent;
+}
+
+.ai-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- 表单 ---------- */
+.ai-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ai-fg-soft);
+  margin-bottom: 5px;
+}
+
+.ai-input,
+.ai-textarea,
+.ai-select {
+  width: 100%;
+  padding: 9px 11px;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--ai-fg);
+  background: var(--ai-surface);
+  border: 1px solid var(--ai-border);
+  border-radius: var(--ai-r-md);
+  outline: none;
+  transition:
+    border-color 0.16s var(--ai-ease),
+    background 0.16s var(--ai-ease);
+}
+
+.ai-input:focus,
+.ai-textarea:focus,
+.ai-select:focus {
+  border-color: var(--ai-accent);
+  background: var(--ai-bg);
+}
+
+.ai-textarea {
+  resize: vertical;
+  line-height: 1.65;
+}
+
+/* ---------- 提示块 ---------- */
+.ai-error,
+.ai-warn,
+.ai-success {
+  padding: 9px 12px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  border-radius: var(--ai-r-md);
+  white-space: pre-wrap;
+}
+
+.ai-error {
+  color: var(--ai-danger);
+  background: var(--ai-danger-soft);
+  border: 1px solid color-mix(in srgb, var(--ai-danger) 30%, transparent);
+}
+
+.ai-warn {
+  color: var(--ai-fg);
+  background: var(--ai-warn-soft);
+  border: 1px solid var(--ai-warn-line);
+}
+
+.ai-success {
+  color: var(--ai-ok);
+  background: var(--ai-ok-soft);
+  border: 1px solid color-mix(in srgb, var(--ai-ok) 30%, transparent);
+}
+
+/* ---------- 工具类 ---------- */
+.ai-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-spacer {
+  flex: 1;
+}
+
+.ai-muted {
+  color: var(--ai-fg-mute);
+}
+
+.ai-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ai-ok);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ai-ok) 18%, transparent);
+}
+
+.ai-dot.busy {
+  background: var(--ai-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ai-accent) 22%, transparent);
+  animation: ai-pulse 1.1s ease-in-out infinite;
+}
+
+/* ---------- 动效 ---------- */
+@keyframes ai-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ai-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes ai-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-root *,
+  .ai-root *::before,
+  .ai-root *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

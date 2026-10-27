@@ -1,0 +1,145 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--ai-surface);
+  color: var(--ai-fg);
+  font-family: var(--ai-font);
+}
+
+#app {
+  padding: 28px 16px 56px;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: 14px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.page-header .head-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.page-header p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+}
+
+.block h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-tip {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.field-tip a {
+  color: var(--ai-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.field-tip a:hover {
+  text-decoration: underline;
+}
+
+.actions {
+  gap: 10px;
+}
+
+.actions .ai-pill,
+.actions .ai-btn {
+  padding: 9px 18px;
+}
+
+.list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+
+.switch {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.switch input {
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  accent-color: var(--ai-accent);
+  cursor: pointer;
+}
+
+.save-tip {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ai-ok);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 11px;
+  background: var(--ai-surface);
+  border-radius: var(--ai-r-md);
+}
+
+.stat span {
+  font-size: 11px;
+  color: var(--ai-fg-mute);
+}
+
+.stat b {
+  font-size: 15px;
+  font-weight: 700;
+}
